@@ -7,6 +7,6 @@ const server =  app.listen( PORT , () =>{
 })
 
 
-server.on('SIGINT', ()=>{
-    
-})
+// process.on('SIGINT', ()=>{
+//     server.close( ()=> console.log(" server out off"))
+// })
