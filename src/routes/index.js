@@ -1,9 +1,14 @@
 'use strict'
 const express = require('express')
 const router = express.Router()
-const accessRouter = require('./access/index')
-export function init(app){
+const accessRouter = require('./access')
 
-    app.use('./v1/access',accessRouter);
+module.exports.init = (app) =>{
+    app.use('/v1/api',accessRouter);
+
+    app.get('/', (req, res) => {
+        res.send('Hello SI');
+    });
+
     app.use(router);
 }

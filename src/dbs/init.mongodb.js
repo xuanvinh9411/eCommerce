@@ -1,10 +1,7 @@
 'use strict'
 
 const mongoose = require("mongoose");
-const config = require('../configs/config.mongodb')
-// const connectString = 'mongodb://localhost:27017/'
-const connectString = 'mongodb://deva$$:devp4$$@103.90.224.153:27017/myFirstDatabase'
-
+const {MONGO_URI,connectOptions} = require('../configs/config.mongodb')
 
 class Database {
     constructor() {
@@ -18,9 +15,9 @@ class Database {
             mongoose.set('debug',{color : true});
         }
         mongoose
-            .connect(config.db)
+            .connect(MONGO_URI,connectOptions)
             .then(_ => console.log(`Connect Mongodb Success`))
-            .catch(err => console.error(`Erro Connect!`))
+            .catch(err => console.error(`Erro Connect!`,err))
     }
 
     static getInstance(){
