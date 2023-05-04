@@ -9,11 +9,15 @@ require('dotenv').config();
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
+app.use(express.json())
+app.use(express.urlencoded(({
+    extended : true
+})))
 
 //Init DB
 require('./dbs/init.mongodb')
 const { countConnect , checkOverLoad } = require('./helpers/check.connect')
-checkOverLoad();
+// checkOverLoad();
 
 //Init router
 // app.use('',require('./routes'))

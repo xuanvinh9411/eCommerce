@@ -1,22 +1,23 @@
 'use strict'
 
 const mongoose = require('mongoose'); // Erase if already required
-const DOCUMENT_NAME = 'Key'
-const COLLECTION_NAME = 'Keys'
+const DOCUMENT_NAME = 'ApiKey'
+const COLLECTION_NAME = 'ApiKeys'
 // Declare the Schema of the Mongo model
 var keyTokenSchema = new mongoose.Schema({
-    user:{
-        type:mongoose.Types.ObjectId,
-        required:true,
-        ref:'Shop',
-    },
-    publicKey:{
+    key:{
         type:String,
         required:true,
+        unique:true
     },
-    refreshToken:{
-        type:Array,
-        default:[],
+    status:{
+        type:Boolean,
+        required:true,
+    },
+    permissions:{
+        type:[String],
+        required:true,
+        enum:['000','111','222'],
     }
 },{
     collection : COLLECTION_NAME,
