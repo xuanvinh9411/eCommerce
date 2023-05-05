@@ -4,6 +4,7 @@
 # @name login
 POST {{url_dev}}/shop/signup
 Content-Type: application/json
+X-API-KEY: xxx000
 
 {
     "name" : "Shop Dev",
