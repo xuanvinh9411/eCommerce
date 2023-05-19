@@ -23,5 +23,20 @@ const { countConnect , checkOverLoad } = require('./helpers/check.connect')
 // app.use('',require('./routes'))
 Router.init(app)
 // handling error
-
+app.use(( req, res, next) => {
+    const error = new Error('not Found')
+    error.status = 404
+    error.log = 'test log'
+    next(error)
+})
+app.use((error, req, res, next) => {
+    const statusCode = error.status || 500
+    const log = error.log 
+    console.log(log)
+    return res.status().json({
+        status: 'error',
+        code : statusCode,
+        message : error.message || 'InterNal Server Error'
+    })
+})
 module.exports = app
