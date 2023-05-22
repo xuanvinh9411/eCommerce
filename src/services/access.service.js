@@ -47,10 +47,12 @@ class AccessService {
                         privateKey : privateKey
                     })
                     if(!keyStore){
-                        return {
-                            code : 'xxx',
-                            message : 'publicKeyString error',
-                        }
+                        throw new BadRequestError('Erro: publicKeyString error!') 
+
+                        // return {
+                        //     code : 'xxx',
+                        //     message : 'publicKeyString error',
+                        // }
                     }
 
                     // const publicKeyObject = crypto.createPublicKey(publicKeyString)
