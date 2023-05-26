@@ -33,7 +33,7 @@ app.use((error, req, res, next) => {
     const statusCode = error.status || 500
     const log = error.log 
     console.log(log)
-    return res.status().json({
+    return res.status(statusCode).json({
         status: 'error',
         code : statusCode,
         message : error.message || 'InterNal Server Error'
