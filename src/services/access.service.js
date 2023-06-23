@@ -1,14 +1,15 @@
 'use strict'
 const Shop = require('../models/shop.model')
 const KeyTokenService = require('./keyToken.service')
-const { creaKeyTokenPair }  = require('../auth/authUtils')
+const ShopService = require('./shop.service')
+const { creaKeyTokenPair, verifyJWT }  = require('../auth/authUtils')
 const { getIntoData }  =require('../utils/index')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const { 
         BadRequestError, 
-        ConflictRequestError,
-        AuthFailureError
+        AuthFailureError,
+
             } = require('../core/error.response')
 
 //service
@@ -21,6 +22,45 @@ const RoleShop = {
     ADMIN :  'ADMIN',
 }
 class AccessService {
+
+    static handelRefreshToken = async (refreshToken) =>{
+        
+        const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken);
+        // resresh token use
+        if(foundToken){
+            // decode check user
+            const {userId} = await verifyJWT(refreshToken,foundToken.privateKey)
+            // delete key
+            await KeyTokenService.deleteKeyById(userId)
+            throw new ForbiddenError('Something wrong happend !! pls relogin')
+        }
+
+        // check refresh token exitst
+        const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+        if(!holderToken) throw new AuthFailureError('Shop not regiteted')
+
+        //verify token
+        const {userId, email} = await verifyJWT(refreshToken,holderToken.privateKey)
+        const foundShop = await ShopService.findByEmail({email})
+        if(!foundShop) throw new AuthFailureError('Shop not regiteted')
+
+        //create new token mới
+        const tokens = await creaKeyTokenPair({userId, email},holderToken.publicKey,holderToken.privateKey)
+
+        await holderToken.updateOne({
+            $set:{
+                refreshToken : tokens.refreshToken,
+            },
+            $addToSet:{
+                refreshTokensUsed : refreshToken,
+            }
+        })
+
+        return {
+            user: {userId},
+            tokens
+        }
+    }
 
     static logout = async({keyStore}) =>{
         const delkey = await KeyTokenService.removeKeyById(keyStore._id);
@@ -51,7 +91,7 @@ class AccessService {
             userId : foundShop._id,
             privateKey,
             publicKey,
-            refreshToken
+            refreshToken : tokens.refreshToken
         })
         return {
             metadata: {
