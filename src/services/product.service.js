@@ -13,10 +13,10 @@ class ProductFactory {
      */
     static async createProduct(type, payload) {
         switch (type){
-            case "Clothing":
+            case "Electronics":
                return new Electronics(payload)
             case "Clothing":
-               return new Electronics(payload).creaetProduct();
+               return new Clothing(payload).creaetProduct();
             default:
                 throw new BadRequestError(`Invalid Product Types ${type}`);
         }
@@ -34,7 +34,7 @@ class ProductFactory {
     product_attributes : {type : Schema.Types.Mixed , required : true},
 */
 //define base product class
-class Prodcut{
+class Product{
     constructor({
         product_name:product_name,
         product_thumb:product_thumb,
@@ -63,3 +63,18 @@ class Clothing extends Product{
         return newProduct;
     }
 }
+
+
+//define sub-class for different product types Electronics
+class Electronics extends Product{
+    async creaetProduct(){
+        const newElectronic = await electronic.create(this.product_attributes)
+        if(!newElectronic) throw new BadRequestError('create new Electronic error');
+
+        const newProduct = await super.creaetProduct()
+        if(!newClothing) throw new BadRequestError('create new Product error');
+        return newProduct;
+    }
+}
+
+module.exports = ProductFactory;
