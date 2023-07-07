@@ -7,7 +7,6 @@ const { authenticationV2 } = require('../../auth/authUtils')
 
 // authentication 
 router.use(authenticationV2)
-router.get('/shop/logout',asyncHandler(accessController.logout))
-router.get('/shop/handelRefreshToken',asyncHandler(productController.createProduct))
+router.post('/',asyncHandler(productController.createProduct))
 
 module.exports = router;
