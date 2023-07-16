@@ -1,6 +1,6 @@
 'use strict'
 
-const {product , clothing, electronic } = require('../models/product.model')
+const {product , clothing, electronic , funiture } = require('../models/product.model')
 const { 
     BadRequestError, 
     AuthFailureError,
@@ -8,18 +8,20 @@ const {
 
 class ProductFactory {
     /**
-     *  type : 'Clothing'
      * payload
      */
-    static async createProduct(type, payload) {
-        switch (type){
-            case "Electronics":
-               return await new Electronics(payload).creaetProduct();
-            case "Clothing":
-               return await new Clothing(payload).creaetProduct();
-            default:
-                throw new BadRequestError(`Invalid Product Types ${type}`);
-        }
+    static productRegistry = { }
+
+    static registerProductType(type , classRef){
+        ProductFactory.productRegistry[type] = classRef
+    }
+   
+    static async createProduct(type, payload) 
+    {
+        const productClass = ProductFactory.productRegistry[type]
+        if(!productClass) throw new BadRequestError(`Invalid Product Types ${type}`);
+        return new productClass(payload).creaetProduct()
+        
     }
 }
 
@@ -57,7 +59,6 @@ class Product{
 
     // createe new product
     async createProduct(product_id){
-        console.log("product_id",product_id)
         return await product.create({...this, _id : product_id})
     }
 }
@@ -84,7 +85,6 @@ class Electronics extends Product{
             ...this.product_attributes,
         product_shop: this.product_shop,
     })
-        console.log({newElectronic})
         if(!newElectronic) throw new BadRequestError('create new Electronic error');
 
         const newProduct = await super.createProduct(newElectronic._id)
@@ -93,4 +93,24 @@ class Electronics extends Product{
     }
 }
 
+
+//define sub-class for different product types Funiture
+class Funitures extends Product{
+    async creaetProduct(){
+        const newFuniture = await funiture.create({
+            ...this.product_attributes,
+        product_shop: this.product_shop,
+    })
+        if(!newFuniture) throw new BadRequestError('create new newFuniture error');
+
+        const newProduct = await super.createProduct(newFuniture._id)
+        if(!newProduct) throw new BadRequestError('create new Product error');
+        return newProduct;
+    }
+}
+
+// register product types
+ProductFactory.registerProductType('Clothing',Clothing)
+ProductFactory.registerProductType('Electronics',Electronics)
+ProductFactory.registerProductType('Furniture',Funitures)
 module.exports = ProductFactory;

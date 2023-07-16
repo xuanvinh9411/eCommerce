@@ -113,8 +113,8 @@ const authenticationV2 = asyncHandler(async(req, res, next)=>{
     try {
         const decodeUser = JWT.verify( accessToken,keyStore.publicKey )
         if(userId !== decodeUser.userId) throw new AuthFailureError('Invanlid userId');
-        req.user = keyStore
-        console.log("req.user",req.user)
+        req.keyStore = keyStore
+        req.user = decodeUser
         return next()
     } catch (error) {
         throw error

@@ -108,7 +108,6 @@ class AccessService {
         //check email exists
         const foundShop = await findByEmail({email});
         if(!foundShop) throw new BadRequestError('Shop not registered')
-        console.log({foundShop})
         // compare password 
         const match = bcrypt.compare(password,foundShop.password);
         if(!match) throw new AuthFailureError('Authentication error') 

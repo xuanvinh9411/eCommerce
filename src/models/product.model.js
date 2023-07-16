@@ -24,7 +24,8 @@ const productSchema = new Schema({
 const clothingSchema = new Schema({
     brand : {type : String,require: true},
     size : String,
-    material : String
+    material : String,
+    product_shop: {type : Schema.Types.ObjectId , ref : 'Shop'},
 },{
     collection : 'clothes',
     timestamps: true
@@ -32,10 +33,21 @@ const clothingSchema = new Schema({
 
 const electronicSchema = new Schema({
     manufacturer : {type : String,require: true},
-    mode : String,
-    color : String
+    model : String,
+    color : String,
+    productshop: {type : Schema.Types.ObjectId , ref : 'Shop'},
 },{
     collection : 'electonics',
+    timestamps: true
+})
+
+const funitureSchema = new Schema({
+    brand : {type : String,require: true},
+    size : String,
+    material : String,
+    product_shop: {type : Schema.Types.ObjectId , ref : 'Shop'},
+},{
+    collection : 'funitures',
     timestamps: true
 })
 
@@ -43,4 +55,5 @@ module.exports = {
     product : model(DOCUMENT_NAME,productSchema),
     electronic : model('Electronics',electronicSchema),
     clothing : model('Clothing',clothingSchema),
+    funiture : model('Funiture',funitureSchema),
 }
