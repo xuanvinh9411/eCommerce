@@ -22,6 +22,23 @@ class ProductController {
         }).send(res)
     }
 
+    //Query //
+    /**
+     * @description Get all Drafts for shop
+     * @param {Number} limit 
+     * @param {Number} skip 
+     * @return {JSON}  
+     */
+    getAllDraftsForShop = async(req, res, next)=>{
+        new SuccessResponse({
+            message: 'Get list Fraft success!',
+            metadata : await ProductServiceV2.findAllDraftsForShop({
+                product_shop : req.user.userId
+            })
+        }).send(res)
+    }
+    // End Query //
+
 }
 
 module.exports = new ProductController()

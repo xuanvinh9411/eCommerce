@@ -32,7 +32,8 @@ const productSchema = new Schema({
 
 // Document middleware : runs bdefore .save() and .create()...
 productSchema.pre('save', function(next){
-    this.product_slug = slugity(this.product_name,{lower : true})
+    this.product_slug = slugify(this.product_name,{lower : true})
+    next();
 })
 //type clothing
 

@@ -1,6 +1,7 @@
 'use strict'
 
 const {product , clothing, electronic , funiture } = require('../models/product.model')
+const { findAllDraftsForShop } = require('../models/repositories/product.repo')
 const { 
     BadRequestError, 
     AuthFailureError,
@@ -22,6 +23,17 @@ class ProductFactory {
         if(!productClass) throw new BadRequestError(`Invalid Product Types ${type}`);
         return new productClass(payload).creaetProduct()
         
+    }
+
+    // PUT //
+    static async publishProductByShop({product_shop, product_id}){
+        
+    }
+    //END PUT //
+
+    static async findAllDraftsForShop({product_shop,limit = 50 ,skip = 0}){
+        const query  = { product_shop , isDraft : true}
+        return await findAllDraftsForShop({query ,limit , skip})
     }
 }
 
