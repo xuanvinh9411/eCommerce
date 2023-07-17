@@ -9,7 +9,7 @@ const crypto = require('crypto')
 const { 
         BadRequestError, 
         AuthFailureError,
-
+        ForbiddenError
             } = require('../core/error.response')
 
 //service
@@ -22,6 +22,36 @@ const RoleShop = {
     ADMIN :  'ADMIN',
 }
 class AccessService {
+
+    static handelRefreshTokenV2 = async ({keyStore,user,refreshToken}) =>{
+        const { userId , email } = user
+
+        if(keyStore.refreshTokensUsed.includes(refreshToken)){
+            await KeyTokenService.deleteKeyById(userId);
+            throw new ForbiddenError('Something wrong happend !! pls relogin')
+        }
+        if(keyStore.refreshToken !== refreshToken) throw new AuthFailureError('Shop not regiteted')
+
+        const foundShop = await findByEmail({email})
+        if(!foundShop)throw new AuthFailureError('Shop not regiteted 2')
+
+        //create new token mới
+        const tokens = await creaKeyTokenPair({userId, email},keyStore.publicKey,keyStore.privateKey)
+
+        await keyStore.updateOne({
+            $set:{
+                refreshToken : tokens.refreshToken,
+            },
+            $addToSet:{
+                refreshTokensUsed : refreshToken,
+            }
+        })
+
+        return {
+            user,
+            tokens
+        }
+    }
 
     static handelRefreshToken = async (refreshToken) =>{
         
@@ -78,7 +108,6 @@ class AccessService {
         //check email exists
         const foundShop = await findByEmail({email});
         if(!foundShop) throw new BadRequestError('Shop not registered')
-        console.log({foundShop})
         // compare password 
         const match = bcrypt.compare(password,foundShop.password);
         if(!match) throw new AuthFailureError('Authentication error') 
