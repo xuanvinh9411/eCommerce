@@ -15,13 +15,22 @@ class ProductController {
         // }).send(res)
 
         new SuccessResponse({
-            message: 'Get token success!',
-            metadata : await ProductServiceV2.createProduct(req.body.product_type,{
+            message: 'Create new Product success!',
+            metadata : await ProductServiceV2.publishProductByShop({
+                product_id : req.params.id,
+                product_shop : req.user.userId
+            })
+        }).send(res)
+    }
+
+    publishProductByShop = async(req, res, next) =>{
+        new SuccessResponse({
+            message: 'Create new Product success!',
+            metadata : await ProductServiceV2.publishProductByShop(req.body.product_type,{
                 ...req.body,
                 product_shop :  req.user.userId})
         }).send(res)
     }
-
     //Query //
     /**
      * @description Get all Drafts for shop
@@ -38,6 +47,16 @@ class ProductController {
         }).send(res)
     }
     // End Query //
+
+
+    getAllPublishForShop = async(req, res, next)=>{
+        new SuccessResponse({
+            message: 'Get list publish success!',
+            metadata : await ProductServiceV2.findAllPublishForShop({
+                product_shop : req.user.userId
+            })
+        }).send(res)
+    }
 
 }
 
