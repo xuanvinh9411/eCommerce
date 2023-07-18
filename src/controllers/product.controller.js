@@ -16,6 +16,15 @@ class ProductController {
 
         new SuccessResponse({
             message: 'Create new Product success!',
+            metadata : await ProductServiceV2.createProduct(req.body.product_type,{
+                ...req.body,
+                product_shop :  req.user.userId})
+        }).send(res)
+    }
+
+    publishProductByShop = async(req, res, next) =>{
+        new SuccessResponse({
+            message: 'Publish Product success!',
             metadata : await ProductServiceV2.publishProductByShop({
                 product_id : req.params.id,
                 product_shop : req.user.userId
@@ -23,14 +32,39 @@ class ProductController {
         }).send(res)
     }
 
-    publishProductByShop = async(req, res, next) =>{
+    unPublishProductByShop = async(req, res, next) =>{
         new SuccessResponse({
-            message: 'Create new Product success!',
-            metadata : await ProductServiceV2.publishProductByShop(req.body.product_type,{
-                ...req.body,
-                product_shop :  req.user.userId})
+            message: 'UnPublish Product success!',
+            metadata : await ProductServiceV2.unPublishProductByShop({
+                product_id : req.params.id,
+                product_shop : req.user.userId
+            })
         }).send(res)
     }
+
+    getListSearchProduct = async(req, res, next) =>{
+        new SuccessResponse({
+            message: 'Get List Search Product success!',
+            metadata : await ProductServiceV2.searchProducts(req.params)
+        }).send(res)
+    }
+
+    findAllProducts = async(req, res, next) =>{
+        new SuccessResponse({
+            message: 'Get List findAllProducts success!',
+            metadata : await ProductServiceV2.findAllProduct(req.query)
+        }).send(res)
+    }
+
+    findProducts = async(req, res, next) =>{
+        new SuccessResponse({
+            message: 'Get List findProducts success!',
+            metadata : await ProductServiceV2.findProduct({
+                product_id : req.params.product_id
+            })
+        }).send(res)
+    }
+
     //Query //
     /**
      * @description Get all Drafts for shop

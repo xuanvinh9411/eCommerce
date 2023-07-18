@@ -7,8 +7,8 @@ const { apiKey } = require('../auth/checkAuth')
 
 module.exports.init = (app) =>{
     app.use(apiKey);
-    app.use('/v1/api',accessRouter);
     app.use('/v1/api/product',productRouter);
+    app.use('/v1/api',accessRouter);
 
     app.get('/', (req, res) => {
         res.send('Hello SI');
