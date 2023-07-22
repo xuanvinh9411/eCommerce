@@ -4,6 +4,7 @@ const { discount } = require('../models/discount.model')
 const { 
     BadRequestError, 
     AuthFailureError,
+    NotFoundError,
         } = require('../core/error.response')
 const { convertToObjectIdMongdb } = require('../utils/index')
 const { 
@@ -11,7 +12,8 @@ const {
         } = require('../models/repositories/product.repo')
 const  {
             findAllDiscountCodesUnSelect,
-            findAllDiscountCodesSelect
+            findAllDiscountCodesSelect,
+            checkDiscountExists
         } = require('../models/repositories/discount.repo')
     /*
         Discount Services
@@ -125,5 +127,25 @@ class DiscountService{
             model : discount 
         })
         return discounts
+    }
+
+    static async getDiscountAmount({codeId,userId,shopId,productId}){
+        const foundDisCount = await checkDiscountExists({
+            model : discount ,
+            filter : {
+                discount_code : codeId,
+                discount_shopID : convertToObjectIdMongdb(shopId),
+            }
+        })
+        if(!foundDisCount) throw new NotFoundError(`discount doesn't exitst`)
+
+        const { discount_is_active , discount_max_uses } = foundDisCount
+
+        if(!discount_is_active) throw new new NotFoundError(`discount expried`)
+        if(!discount_max_uses) throw new new NotFoundError(`discount are out`)
+
+        if(new Date() < new Date(discount_start_date) || new Date() > new Date(discount_end_date)){
+            throw new new NotFoundError(`discount expried`)
+        }
     }
 }
