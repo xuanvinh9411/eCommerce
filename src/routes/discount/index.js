@@ -5,7 +5,7 @@ const discountController = require('../../controllers/discount.controller')
 const asyncHandler = require('../../helpers/asyncHandler')
 const { authenticationV2 } = require('../../auth/authUtils')
 
-router.post('/aoumt',asyncHandler(discountController.getDiscountAmount))
+router.post('/amount',asyncHandler(discountController.getDiscountAmount))
 router.post('/list_product_code',asyncHandler(discountController.getAllDiscountCodesWithProducts))
 
 

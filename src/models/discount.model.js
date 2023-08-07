@@ -16,7 +16,7 @@ var discountSchema = new mongoose.Schema({
     discount_uses_count : { type: Number, required : true}, // quanlity discount uses
     discount_users_used :  { type: Array, default : []},
     discount_max_uses_per_user : {type : Number, required : true}, // max quanlity once user uses
-    discount_min_oder_value : { type : Number, required : true},
+    discount_min_order_value : { type : Number, required : true},
     discount_shopId : {type: mongoose.Schema.Types.ObjectId, ref: 'Shop'},
     discount_is_active: {type: Boolean, default : true},
     discount_applies_to : {type: String, required : true, enum: ['all','specific'] },

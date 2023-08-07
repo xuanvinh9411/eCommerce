@@ -4,17 +4,16 @@ const { unGetselectData, getselectData } = require('../../utils/index')
 
 const findAllDiscountCodesUnSelect = async({
    limit = 50, page = 1, sort = 'ctime',
-   filter , unSelect , mode
+   filter , unSelect , model
 }) =>{
     const skip = (page -1) * limit;
     const sortBy = sort === 'ctime' ? {_id:-1} : {_id: 1}
-    const documents = await mode.find(filter)
+    const documents = await model.find()
     .sort(sortBy)
     .skip(skip)
     .limit(limit)
     .select(unGetselectData(unSelect))
     .lean()
-
     return documents
 }
 
@@ -35,7 +34,9 @@ const findAllDiscountCodesSelect = async({
      return documents
  }
 
- const checkDiscountExists = async (model ,filter) =>{
+ const checkDiscountExists = async ({model ,filter}) =>{
+    console.log("model",model)
+    console.log("filter",filter)
     return await model.findOne(filter).lean()
  }
 
