@@ -1,8 +1,8 @@
 'use strict'
 const _ = require('lodash')
-const {Types} = require('mongoose')
+const mongoose = require('mongoose')
 
-const convertToObjectIdMongdb = id  => Types.ObjectId(id);
+const convertToObjectIdMongdb = id  => new  mongoose.Types.ObjectId(id);
 
 const getIntoData = ({ fileds = [],object = {}}) =>{
     return _.pick(object,fileds)

@@ -5,7 +5,7 @@ const DOCUMENT_NAME = 'Discount'
 const COLLECTION_NAME = 'discounts'
 // Declare the Schema of the Mongo model
 var discountSchema = new mongoose.Schema({
-    discount_Name : {type : String, required : true},
+    discount_name : {type : String, required : true},
     discount_description : {type : String, required : true},
     discount_type : {type : String, default : 'fixed_amount'},//fixed_amount : money . percentage : %
     discount_value : { type: Number, required : true},
