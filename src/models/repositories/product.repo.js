@@ -2,7 +2,7 @@
 
 const {product,electronic} = require('../product.model')
 const { Types } = require('mongoose') 
-const { getselectData ,unGetselectData } = require('../../utils/index')
+const { getselectData ,unGetselectData,convertToObjectIdMongdb } = require('../../utils/index')
 
 const findAllDraftsForShop = async({query,limit,skip}) =>{
     return await queryProduct({query,limit,skip})
@@ -25,8 +25,8 @@ const searchproductByUser = async({keySearch}) =>{
 
 const publishProductByShop = async({product_shop, product_id}) =>{
     const foundShop = await product.findOne({
-        product_shop : new Types.ObjectId(product_shop),
-        _id : new Types.ObjectId(product_id),
+        product_shop : convertToObjectIdMongdb(product_shop),
+        _id : convertToObjectIdMongdb(product_id),
     })
     if(!foundShop) return null
 
@@ -40,8 +40,8 @@ const publishProductByShop = async({product_shop, product_id}) =>{
 
 const unPublishProductByShop = async({product_shop, product_id}) =>{
     const foundShop = await product.findOne({
-        product_shop : new Types.ObjectId(product_shop),
-        _id : new Types.ObjectId(product_id),
+        product_shop : convertToObjectIdMongdb(product_shop),
+        _id : convertToObjectIdMongdb(product_id),
     })
     if(!foundShop) return null
 
@@ -89,6 +89,10 @@ const queryProduct = async({query,limit,skip}) =>{
     .lean()
     .exec()
 }
+
+const getProductById = async(productId) =>{
+    return await product.findOne({'_id':convertToObjectIdMongdb(productId)}).lean()
+}
 module.exports = {
     findAllDraftsForShop,
     publishProductByShop,
@@ -97,5 +101,6 @@ module.exports = {
     searchproductByUser,
     findAllProduct,
     findProduct,
-    updateProductById
+    updateProductById,
+    getProductById
 }

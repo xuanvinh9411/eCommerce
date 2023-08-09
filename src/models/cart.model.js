@@ -10,7 +10,6 @@ var cartSchema = new mongoose.Schema({
         type:String,
         enum:['active','completed','failed','padnsing'],
         default :active,
-        cart_products:{type: Array,required: true, default:[]},
         /**
          * {
          *  productId,
@@ -21,6 +20,7 @@ var cartSchema = new mongoose.Schema({
          * }
          */
     },
+    cart_products:{type: Array,required: true, default:[]},
     cart_count_product :{type:Number,default:0},
     cart_userId:{type:Number,required:true},
 },{
