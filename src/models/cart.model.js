@@ -9,7 +9,7 @@ var cartSchema = new mongoose.Schema({
     cart_state : {
         type:String,
         enum:['active','completed','failed','padnsing'],
-        default :active,
+        default :'active',
         /**
          * {
          *  productId,
