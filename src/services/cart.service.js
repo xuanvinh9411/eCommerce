@@ -6,10 +6,11 @@ class CartService {
 
     static createUserCar = async({userId,product}) =>{
         try {
+            console.log("product",product)
             const query = {cart_userId : userId,cart_state: 'active'}, 
                   updateOrInsert = { 
                     $addToSet:{
-                        cart_product: product
+                        cart_products: product
                     }
                    },
                   options = { upsert : true , new : true}
@@ -20,18 +21,18 @@ class CartService {
     }
 
     static updateUserCartQuantity = async ({userId,product}) =>{
-        const {producId ,quantity} = product
+        const {productId ,quantity} = product
         const query = {
             cart_userId : userId,
-            'cart_product.productId': producId,
+            'cart_products.productId': productId,
             cart_state : 'active'
         }
-        updateSet = {
+        const updateSet = {
             $inc:{
                 'cart_product.$.quantity': quantity
             }
         }
-        options = { upsert : true , new : true}
+        const options = { upsert : true , new : true}
         return await cart.findOneAndUpdate(query,updateSet,options)
     }
 
@@ -43,7 +44,7 @@ class CartService {
         }
 
         if(!userCart.cart_products.length){
-            userCart.userCart = [product]
+            userCart.cart_products = [product]
             return await userCart.save()
         }
         return await CartService.updateUserCartQuantity({userId,product})
