@@ -55,44 +55,42 @@ class CheckoutService {
         }, shop_order_ids_new = []
 
         for (let i = 0; i < shop_order_ids.length; i++) {
-            const { shopId , shop_discount = [], item_product = []} = shop_order_ids[i]
+            const { shopId , shop_discounts = [], item_products = []} = shop_order_ids[i]
             
-            const checkProductServer = await checkProductByServer(item_product)
-            if(checkProductServer[0]) throw new BadRequestError('order wrong!!!')
+            const checkProductServer = await checkProductByServer(item_products)
+            if(!checkProductServer[0]) throw new BadRequestError('order wrong!!!')
 
-            const checkoutPrice = checkprodductServer.reduce((acc,product) =>{
+            if(item_products.quantity > checkProductServer.quantity )throw new BadRequestError('order wrong!!!')
+            const checkoutPrice = checkProductServer.reduce((acc,product) =>{
                 return acc + (product.quantity * product.price)
             },0)
 
             //tổng tiền hàng
-            checkout_order.totalPrice = checkoutPrice
-            
+            checkout_order.totalPrice += checkoutPrice
             const itemCheckout = {
                 shopId,
-                shop_discount,
+                shop_discounts,
                 priceRaw: checkoutPrice,
                 priceApplyDiscount: checkoutPrice,
                 item_products : checkProductServer
             }
             
             // nếu discount > 0 check hợp lệ
-            if( shop_discount.length >0 ){
+            if( shop_discounts.length >0 ){
                 // get discount
-                const {totalPrice = 0 , discount = 0 } = await getDiscountAmount({
-                    codeId : shop_discount[0].codeId,
+                const { totalPrice = 0 , discount = 0 } = await getDiscountAmount({
+                    codeId : shop_discounts[0].code,
                     userId,
                     shopId,
                     products: checkProductServer
                 })
-
-                checkout_order.totalCheckout += discount
-
+                checkout_order.totalDiscount += discount
                 if(discount > 0){
                     itemCheckout.priceApplyDiscount = checkoutPrice - discount
                 }
             }
-
             checkout_order.totalCheckout += itemCheckout.priceApplyDiscount
+
             shop_order_ids_new.push(itemCheckout)
 
         }  

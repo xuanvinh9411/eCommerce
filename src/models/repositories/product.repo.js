@@ -1,7 +1,7 @@
 'use strict'
 
 const {product,electronic} = require('../product.model')
-const { Types } = require('mongoose') 
+const { Types } = require('mongoose')
 const { getselectData ,unGetselectData,convertToObjectIdMongdb } = require('../../utils/index')
 
 const findAllDraftsForShop = async({query,limit,skip}) =>{
@@ -30,7 +30,7 @@ const publishProductByShop = async({product_shop, product_id}) =>{
     })
     if(!foundShop) return null
 
-    foundShop.isDraft = false 
+    foundShop.isDraft = false
     foundShop.isPushlished = true
 
     const  { modifiedCount } = await foundShop.save()
@@ -45,7 +45,7 @@ const unPublishProductByShop = async({product_shop, product_id}) =>{
     })
     if(!foundShop) return null
 
-    foundShop.isDraft = true 
+    foundShop.isDraft = true
     foundShop.isPushlished = false
 
     const  { modifiedCount } = await foundShop.save()
@@ -100,8 +100,8 @@ const checkProductByServer = async(products)=>{
         if(foundProduct){
             return {
                 price : foundProduct.product_price,
-                quantity : foundProduct.quantity,
-                productId : foundProduct.productId,
+                quantity : product.quantity,
+                productId : product.productId,
             }
         }
     }))
