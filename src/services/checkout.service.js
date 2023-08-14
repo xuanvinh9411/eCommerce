@@ -1,10 +1,11 @@
 'use strict'
+const { orderBy } = require('lodash')
 const { BadRequestError } = require('../core/error.response')
 const { product } = require('../models/product.model')
 const { findCartById }  = require('../models/repositories/cart.repo')
 const { checkProductByServer }  = require('../models/repositories/product.repo')
 const { getDiscountAmount } = require('./discount.service')
-
+const { acquireLock,releaseLock } = require('./redis.service')
 class CheckoutService {
     /**
      * {
@@ -100,5 +101,45 @@ class CheckoutService {
             checkout_order
         } 
     }
+
+    static async orderByUser({
+        shop_order_ids,
+        cartId,
+        userId,
+        userId,
+        user_address = {},
+        user_payment = {}
+    }){
+        const { shop_order_ids_new , checkout_order} = await CheckoutService.checkoutReview({
+            cartId,
+            userId,
+            shop_order_ids
+        })
+
+        /// check lại tồn kho
+        // get new array Products
+        const products = shop_order_ids_new.flatMap(order => order.item_products);
+        console.log(`products :::`,products)
+        const acquireProduct = []
+        for (let i = 0; products < array.length; i++) {
+            const { productId , quantity } = products[i]
+            const keyLock = await acquireLock(productId,quantity,cartId)
+            acquireProduct.push(keyLock ? true  : false)
+            if(keyLock){
+                await releaseLock(keyLock)
+            }
+        }
+        //neu co mot sản phẩm hết hạn trong kho
+        if(acquireProduct.includes(false)){
+            throw new BadRequestError('update quantity product')
+        }
+
+        
+    }
+
+    
+
 }
+
+
 module.exports = CheckoutService
