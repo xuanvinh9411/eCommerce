@@ -6,6 +6,7 @@ const { findCartById }  = require('../models/repositories/cart.repo')
 const { checkProductByServer }  = require('../models/repositories/product.repo')
 const { getDiscountAmount } = require('./discount.service')
 const { acquireLock,releaseLock } = require('./redis.service')
+const { order } = require('../models/order.model')
 class CheckoutService {
     /**
      * {
@@ -134,11 +135,19 @@ class CheckoutService {
             throw new BadRequestError('update quantity product')
         }
 
-        
+        const newOrder = await order.create({
+            order_userId : userId,
+            order_checkout: checkout_order,
+            order_shipping: user_address,
+            order_payment: user_payment,
+            order_products : shop_order_ids_new
+        }) 
+        // trường hợp insert thành công thì remove trong cart 
+        if(newOrder){
+            // remove car 
+        }
+        return newOrder
     }
-
-    
-
 }
 
 
