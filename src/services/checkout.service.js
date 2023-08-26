@@ -107,7 +107,6 @@ class CheckoutService {
         shop_order_ids,
         cartId,
         userId,
-        userId,
         user_address = {},
         user_payment = {}
     }){
