@@ -7,9 +7,8 @@ const {
     NotFoundError,
         } = require('../core/error.response')
 const { convertToObjectIdMongdb } = require('../utils/index')
-const { 
-        findAllProduct ,
-        } = require('../models/repositories/product.repo')
+const { findAllProduct } = require('../models/repositories/product.repo')
+const CheckoutSerVice = require('./checkout.service')
 const  {
             findAllDiscountCodesUnSelect,
             findAllDiscountCodesSelect,
@@ -212,6 +211,25 @@ class DiscountService{
                 discount_uses_count: -1
             }
         })
+    }
+
+    static async orderByUser({
+        shop_order_ids,
+        cartId,
+        userId,
+        user_address = {},
+        user_payment = {}
+    }){
+        const { shop_order_ids_new , checkout_oder } = await CheckoutSerVice.checkoutReview({
+            cartId,
+            userId,
+            shop_order_ids
+        })
+        //check review product exists
+        const products = shop_order_ids_new.flatMap( order => order.item_products)
+        for (let i=0;i<products.length ;++i ){
+            const {productId, quantity} = products[i]
+        }
     }
 }
 
