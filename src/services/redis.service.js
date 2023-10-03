@@ -5,11 +5,10 @@ const { promisify } = require('util');
 const { product } = require('../models/product.model');
 const redisClient = redis.createClient()
 const { reservationInventory } = require('../models/repositories/inventory.repo')
-const pexpire = promisify(redisClient.pexpire).bind(redisClient)
-const setnxAsync = promisify(redisClient.setnx).bind(redisClient)
-
 
 const acquireLock = async (productId,quantity,carId) => {
+    const pexpire = promisify(redisClient.pexpire).bind(redisClient)
+    const setnxAsync = promisify(redisClient.setnx).bind(redisClient)
     const key = `lock_v2013_${productId}`
     const retryTimes = 10;
     const expireTime = 3000; //3 seconds tam lock 
