@@ -123,11 +123,12 @@ class CheckoutService {
         const acquireProduct = []
         for (let i = 0; products < array.length; i++) {
             const { productId , quantity } = products[i]
-            const keyLock = await acquireLock(productId,quantity,cartId)
-            acquireProduct.push(keyLock ? true  : false)
-            if(keyLock){
-                await releaseLock(keyLock)
-            }
+            //TODO
+            // const keyLock = await acquireLock(productId,quantity,cartId)
+            // acquireProduct.push(keyLock ? true  : false)
+            // if(keyLock){
+            //     await releaseLock(keyLock)
+            // }
         }
         //neu co mot sản phẩm hết hạn trong kho
         if(acquireProduct.includes(false)){
