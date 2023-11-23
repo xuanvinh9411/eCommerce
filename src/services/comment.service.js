@@ -2,7 +2,7 @@
 
 const  Comment  = require('../models/comment.model')
 
-const { BadRequestError } = require('../core/error.response')
+const { BadRequestError, NotFoundError } = require('../core/error.response')
 const { convertToObjectIdMongdb } = require('../utils/index')
 
 class CommentService {
@@ -21,6 +21,24 @@ class CommentService {
 
         let rightValue
         if(parentId){
+            const parentComment = await Comment.findById(parentId)
+            if(parentComment) throw new NotFoundError(`parent comment not found`)
+            rightValue = parentComment.comment_right
+
+            //update many comments 
+            await Comment.updateMany({
+                comment_productId : convertToObjectIdMongdb(productId),
+                comment_right : {$gte : rightValue}
+            },{
+                $inc : {comment_right : 2}
+            })
+
+            await Comment.updateMany({
+                comment_productId : convertToObjectIdMongdb(productId),
+                comment_left : {$gt : rightValue}
+            },{
+                $inc : {comment_left : 2}
+            })
 
         }else{
             const maxRightValue = await Comment.findOne({
@@ -36,7 +54,7 @@ class CommentService {
         comment.comment_left = rightValue
         comment.comment_left = rightValue + 1
         await comment.save();
-        return comment
+        return comment;
     }
 }
-module.exports = InventoryService
+module.exports = CommentService

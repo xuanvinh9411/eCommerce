@@ -7,11 +7,13 @@ const discountRouter = require('./discount')
 const checkoutRouter = require('./checkout')
 const inventoryRouter = require('./inventory')
 const cartRouter = require('./cart')
+const commentRouter = require('./Comment')
 const { apiKey } = require('../auth/checkAuth')
 
 module.exports.init = (app) =>{
     app.use(apiKey);
     app.use('/v1/api/discount',discountRouter);
+    app.use('/v1/api/comment',commentRouter);
     app.use('/v1/api/checkout',checkoutRouter);
     app.use('/v1/api/inventory',inventoryRouter);
     app.use('/v1/api/cart',cartRouter);
