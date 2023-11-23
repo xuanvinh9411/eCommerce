@@ -13,7 +13,10 @@ app.use(express.json())
 app.use(express.urlencoded(({
     extended : true
 })))
-
+// test mua product 
+// require('./tests/inventory.test')
+// const product = require('./tests/product.test')
+// product.purchaseProduct("quan",10)
 //Init DB
 require('./dbs/init.mongodb')
 const { countConnect , checkOverLoad } = require('./helpers/check.connect')
