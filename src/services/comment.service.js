@@ -1,7 +1,7 @@
 'use strict'
 
 const  Comment  = require('../models/comment.model')
-
+const { getProductById } = require('../models/repositories/product.repo')
 const { BadRequestError, NotFoundError } = require('../core/error.response')
 const { convertToObjectIdMongdb } = require('../utils/index')
 
@@ -55,6 +55,65 @@ class CommentService {
         comment.comment_left = rightValue + 1
         await comment.save();
         return comment;
+    }
+
+    static async getlistCommentsByParentId({
+        productId,
+        parentCommentId = null,
+        limit = 50,
+        offset = 0 // skip
+    }){
+        if(parentCommentId){
+            const parentComment = await Comment.findById(parentCommentId)
+            if(!parent) throw new NotFoundError(`not dounf parentId`)
+
+            const comments = await Comment.find({
+                comment_productId : convertToObjectIdMongdb(productId),
+                comment_left : {$gt : parentComment.comment_left},
+                comment_right : {$lte : parentComment.comment_right}
+            }).select({
+                comment_left : 1,
+                comment_right : 1,
+                comment_content : 1,
+                comment_parentId : 1,
+            }).sort({
+                comment_left : 1
+            })
+            return comments;
+        }
+
+        const comments = await Comment.find({
+            comment_productId : convertToObjectIdMongdb(productId),
+            comment_parentId : convertToObjectIdMongdb(parentCommentId),
+        }).select({
+            comment_left : 1,
+            comment_right : 1,
+            comment_content : 1,
+            comment_parentId : 1,
+        }).sort({
+            comment_left : 1
+        })
+        return comments;
+    }
+
+    static async deleteComments({
+        productId , 
+        commentId ,
+    }){
+        const product = await getProductById(productId)
+        if(!product) throw new NotFoundError(`not found product`)
+
+        const comment = await Comment.findById(commentId)
+        if(!comment) throw new NotFoundError(`not found Comment`)
+
+        const leftValue = comment.comment_left
+        const rightValue = comment.rightValue
+
+        const width = rightValue - leftValue
+
+        await Comment.deleteMany({
+            comment_productId
+        })
     }
 }
 module.exports = CommentService
