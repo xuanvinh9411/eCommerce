@@ -20,7 +20,8 @@ const {
 const { 
     BadRequestError, 
     AuthFailureError,
-        } = require('../core/error.response')
+        } = require('../core/error.response');
+const { pushNotiToSystem } = require('./notification.service');
 
 class ProductFactory {
     /**
@@ -122,6 +123,17 @@ class Product{
                 shopId : this.product_shop,
                 stock : this.product_quantity
             })
+
+            pushNotiToSystem({
+                type : 'SHOP-001',
+                recivedId : 1,
+                senderId : this.product_shop  ,
+                options : {
+                    product_name  : this.product_name,
+                    shop_name : this.product_shop
+                }
+            }).then(rs => console.log(rs))
+            .catch(console.error)
         }
     }
 
