@@ -112,7 +112,30 @@ class CommentService {
         const width = rightValue - leftValue
 
         await Comment.deleteMany({
-            comment_productId
+            comment_productId : convertToObjectIdMongdb(productId),
+            comment_left : {$gte : leftValue,$lte : rightValue},
+        })
+
+
+        //check delete trong khoảng
+        // await Comment.deleteMany({
+        //     comment_productId : convertToObjectIdMongdb(productId),
+        //     comment_right : {$lte : rightValue},
+        //     comment_left : {$gte : leftValue},
+        // })
+
+        await Comment.updateMany({
+            comment_productId : convertToObjectIdMongdb(productId),
+            comment_left : {$gt : rightValue}
+        },{
+            $inc : {comment_left : -width}
+        })
+
+        await Comment.updateMany({
+            comment_productId : convertToObjectIdMongdb(productId),
+            comment_left : {$gt : rightValue}
+        },{
+            $inc : {comment_right : -width}
         })
     }
 }

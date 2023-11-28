@@ -15,6 +15,13 @@ class CommentController {
             metadata : await CommentService.getlistCommentsByParentId(req.query)
         }).send(res)
     }
+
+    deleteComment = async (req,res,next) =>{
+        new SuccessResponse({
+            message:'Delete comment success',
+            metadata : await CommentService.deleteComments(req.body)
+        }).send(res)
+    }
   
 }
 
