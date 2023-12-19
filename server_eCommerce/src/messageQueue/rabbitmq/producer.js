@@ -1,9 +1,9 @@
 const amqp = require('amqplib')
-const message  = 'hello world!';
+const message  = 'hello microservice';
 
 const runProducer = async () =>{
     try {
-        const connection = await amqp.connect('amqp://guest:guest@localhost:5671');
+        const connection = await amqp.connect('amqp://guest:guest@localhost');
         const channel = await connection.createChannel()
 
         const channelName = 'test-topic'
@@ -12,6 +12,10 @@ const runProducer = async () =>{
         })
         channel.sendToQueue(channelName, Buffer.from(message))
         console.log(`message sent:`,message)
+        setTimeout(()=>{
+            connection.close();
+            process.exit(0);
+        })
     } catch (error) {
         console.error(`runProducer`,error.message)
     }

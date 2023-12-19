@@ -4,13 +4,13 @@ const amqp = require('amqplib')
 
 const connectToRabbitMQ = async () => {
     try {
-        const connection = await amqp.connect('amqp://guest:12345@localhost');
-        if (connection) throw new Error('Cannot connect to rabbitservice')
+        const connection = await amqp.connect('amqp://guest:guest@localhost');
+        if (!connection) throw new Error('Cannot connect to rabbitservice')
 
-        const channel = await connection.createChnnel()
+        const channel = await connection.createChannel()
         return { channel, connection} 
     } catch (error) {
-        conmsole.log(`Error connect rabbitmq`,error.message)
+        console.log(`Error connect rabbitmq`,error.message)
     }
 }
 
@@ -32,16 +32,17 @@ const connectToRabbitMQ = async () => {
 
     const consumerQueue = async ( channel, queueName) =>{
         try {
-            await channel.assertQueue(queueName,{durable: true});
-            console.log(`Waiting for messgae ...`);
-            channel.consume(queueName,msg =>{
-                console.log(`Received message: ${queue} ::`,msg.content.toString());
+            await channel.assertQueue(queueName,
+                                                            {durable: true});
+            console.log(`Waiting for messgae ...`,queueName);
+            channel.consume(queueName,message =>{
+                console.log(`Received ${message.content.toString()}`)
             },{
-                noAck: true
+                noAck: false
             })
         } catch (error) {
             console.error('error bublish message to rabbitMQ:: ',error);
-            throw errorMonitor;
+            throw error;
         }
     }
 module.exports = {
