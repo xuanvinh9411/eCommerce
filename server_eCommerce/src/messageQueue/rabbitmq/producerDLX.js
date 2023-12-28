@@ -2,7 +2,8 @@ const amqp = require('amqplib')
 
 const runProducer = async () =>{
     try {
-        const connection = await amqp.connect('amqp://guest:guest@localhost:5671');
+        const connection = await amqp.connect('amqp://guest:guest@localhost');
+        console.log({connection})
         const channel = await connection.createChannel()
 
         const notificationExchange = 'notificationEx'// notificationEx direct
@@ -31,13 +32,13 @@ const runProducer = async () =>{
             expiration : '10000'
         })
 
-        setTimeout(() => {
-                connection.close();
-                process.exit(0)
-        }, 500);
+        // setTimeout(() => {
+        //         connection.close();
+        //         process.exit(0)
+        // }, 500);
     } catch (error) {
-        console.error(`runProducer`,error.message)
+        console.error(`runProducer`,error)
     }
 }
 
-runProducer().then(result => console.log(result)).catch(console.error)
+runProducer()

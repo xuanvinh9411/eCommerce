@@ -4,7 +4,7 @@ const amqp = require('amqplib')
 
 const connectToRabbitMQ = async () => {
     try {
-        const connection = await amqp.connect('amqp://guest:guest@localhost');
+        const connection = await amqp.connect('amqp://guest:guest@localhost:15672');
         if (!connection) throw new Error('Cannot connect to rabbitservice')
 
         const channel = await connection.createChannel()

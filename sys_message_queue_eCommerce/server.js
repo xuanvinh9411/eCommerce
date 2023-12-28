@@ -1,5 +1,5 @@
 'use stric'
-const { consummetoQueueService } = require(`./src/services/consumerQueue.service`)
+const { consummetoQueueService , consumerToQueueNormal, consumerToQueueFailed } = require(`./src/services/consumerQueue.service`)
 const channelName = 'test-topic'
 
 consummetoQueueService(channelName).then( () =>{

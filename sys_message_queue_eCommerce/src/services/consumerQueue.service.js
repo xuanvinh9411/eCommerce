@@ -29,7 +29,7 @@ const messageService = {
             }
         },
 
-        consumerToQueueFailedL :  async (queueName) =>{
+        consumerToQueueFailed :  async (queueName) =>{
             try {
                 
                 const { channel , connection } = await connectToRabbitMQ()
