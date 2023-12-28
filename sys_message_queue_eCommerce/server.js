@@ -2,7 +2,25 @@
 const { consummetoQueueService , consumerToQueueNormal, consumerToQueueFailed } = require(`./src/services/consumerQueue.service`)
 const channelName = 'test-topic'
 
-consummetoQueueService(channelName).then( () =>{
+// consummetoQueueService(channelName)
+// .then( () =>{
+//     console.log(`Message comsummer started ${channelName}`)
+// })
+// .catch((err)=>{
+// console.error(err.message)
+// })
+
+consumerToQueueNormal(channelName)
+.then( () =>{
+    console.log(`Message comsummer started ${channelName}`)
+})
+.catch((err)=>{
+console.error(err.message)
+})
+
+
+consumerToQueueFailed(channelName)
+.then( () =>{
     console.log(`Message comsummer started ${channelName}`)
 })
 .catch((err)=>{
