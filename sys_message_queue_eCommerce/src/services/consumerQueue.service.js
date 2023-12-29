@@ -19,11 +19,16 @@ const messageService = {
             try {
                 const { channel , connection } = await connectToRabbitMQ()
                 const notiQueue = 'notificationQueueprocess'// asserQueue
+                
+                const timeExpried = 5000
+                setTimeout(()=>{
+                    channel.consume(notiQueue , msg =>{
+                        console.log(`Send notificationQueueprocess sucessfullt processed :::`, msg.content.toString())
+                        channel.ack(msg)
+                    });
+                },timeExpried)
 
-                channel.consume(notiQueue , msg =>{
-                    console.log(`Send notificationQueueprocess sucessfullt processed :::`, msg.content.toString())
-                    channel.ack(msg)
-                });
+               
             } catch (error) {
                 console.error(error)
             }
