@@ -10,20 +10,15 @@ const consumerOrderdMessage = async () =>{
             durable : true
         })
         
-        channel.consum(queueName, msg =>{
+        channel.prefetch(1)
+        channel.consume(queueName, msg =>{
             const message = msg.content.toString()
             setTimeout(() => {
                 console.log('processed: ', message)
                 channel.ack(msg)
             }, Math.random()* 1000);
         });
-        for (let i = 0; i < 10; i++) {
-            const massage = `order-queue-mnessage::${i}`
-            console.log(`message : ${massage}`)
-            channel.sendToQueue(queueName , Buffer.from(message),{
-                persistent: true
-            })
-        }
+    
         setTimeout(() => {
             connection.close()
         }, 1000);
