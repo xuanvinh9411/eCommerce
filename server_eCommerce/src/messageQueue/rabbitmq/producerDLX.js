@@ -32,10 +32,10 @@ const runProducer = async () =>{
             expiration : '10000'
         })
 
-        // setTimeout(() => {
-        //         connection.close();
-        //         process.exit(0)
-        // }, 500);
+        setTimeout(() => {
+                connection.close();
+                process.exit(0)
+        }, 500);
     } catch (error) {
         console.error(`runProducer`,error)
     }
