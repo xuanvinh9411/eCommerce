@@ -17,8 +17,7 @@ consumerToQueueNormal(channelName)
 .catch((err)=>{
 console.error(err.message)
 })
-
-
+ßß
 consumerToQueueFailed(channelName)
 .then( () =>{
     console.log(`Message comsummer started ${channelName}`)
