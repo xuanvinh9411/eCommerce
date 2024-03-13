@@ -5,7 +5,7 @@ const DEV = {
         port : process.env.DEV_APP_PORT || 3052
     },
     db : {
-        host     :  process.env.DEV_DB_HOST     || 'localhost',
+        host     :  process.env.DEV_DB_HOST     || '127.0.0.1',
         port     :  process.env.DEV_DB_PORT     || 27017,
         name     :  process.env.DEV_DB_NAME     || 'shopDEV',
         user     :  process.env.DEV_DB_USER     || 'admin',
@@ -18,7 +18,7 @@ const PRO = {
         port : process.env.PRO_APP_PORT || 3000
     },
     db : {
-        host :  process.env.PRO_DB_HOST || 'localhost',
+        host :  process.env.PRO_DB_HOST || '127.0.0.1',
         port :  process.env.PRO_DB_PORT || 27017,
         name :  process.env.PRO_DB_NAME || 'shopPRO',
     }
@@ -30,4 +30,5 @@ const connectOptions = {
 const config = { DEV, PRO }
 const env = process.env.NODE_END || 'DEV'
 const MONGO_URI = `mongodb://${config[env].db.host}:${config[env].db.port}/${config[env].db.name}`
+console.log(`MONGO_URI`,MONGO_URI)
 module.exports = { MONGO_URI ,connectOptions}

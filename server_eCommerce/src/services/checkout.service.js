@@ -4,7 +4,7 @@ const { BadRequestError } = require('../core/error.response')
 const { product } = require('../models/product.model')
 const { findCartById }  = require('../models/repositories/cart.repo')
 const { checkProductByServer }  = require('../models/repositories/product.repo')
-const { getDiscountAmount } = require('./discount.service')
+const DiscountService = require('./discount.service')
 const { acquireLock,releaseLock } = require('./redis.service')
 const { order } = require('../models/order.model')
 class CheckoutService {
@@ -80,7 +80,7 @@ class CheckoutService {
             // nếu discount > 0 check hợp lệ
             if( shop_discounts.length >0 ){
                 // get discount
-                const { totalPrice = 0 , discount = 0 } = await getDiscountAmount({
+                const { totalPrice = 0 , discount = 0 } = await DiscountService.getDiscountAmount({
                     codeId : shop_discounts[0].code,
                     userId,
                     shopId,
