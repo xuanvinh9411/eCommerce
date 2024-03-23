@@ -13,7 +13,7 @@ const uploadRouter = require('./upload')
 const { apiKey } = require('../auth/checkAuth')
 
 module.exports.init = (app) =>{
-    app.use(apiKey);
+    // app.use(apiKey);
     app.use('/v1/api/upload',uploadRouter);
     app.use('/v1/api/notification',notificationRouter);
     app.use('/v1/api/discount',discountRouter);

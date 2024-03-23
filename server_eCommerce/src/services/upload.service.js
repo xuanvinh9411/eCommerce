@@ -1,5 +1,27 @@
 "use strict";
 const cloudinary = require(`../configs/clouddinary.config`)
+const {s3 , PutObjectCommand} = require('../configs/s3.config')
+// S3 bucket
+
+const uploadImageFromLocalS3 = async({file})=>{
+    try {
+        console.log(file)
+        const command = new PutObjectCommand({
+            Bucket : process.env.AWS_BUCKET_NAME,
+            Key : file.originalname || 'unknow',
+            Body : file.buffer,
+            ContentType : 'image/jpeg'
+        })
+
+        const result  = await s3.send(command)
+        console.log(result)
+        return result
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+//End S3 Bucket 
 
 const upLoadImageFormUrl = async ({urlImage,fileName}) =>{
     try {
@@ -80,5 +102,6 @@ const uploadImageFromLocalFiles = async({
 module.exports = { 
                     upLoadImageFormUrl,
                     uploadImageFromLocal,
-                    uploadImageFromLocalFiles 
+                    uploadImageFromLocalFiles,
+                    uploadImageFromLocalS3
                 }
