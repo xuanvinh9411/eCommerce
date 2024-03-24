@@ -1,22 +1,34 @@
 "use strict";
 const cloudinary = require(`../configs/clouddinary.config`)
-const {s3 , PutObjectCommand} = require('../configs/s3.config')
+const {
+                s3 , 
+                PutObjectCommand , 
+                getSignedUrl,
+                GetObjectCommand
+            } = require('../configs/s3.config')
+const crypto = require('crypto')
 // S3 bucket
 
 const uploadImageFromLocalS3 = async({file})=>{
     try {
-        console.log(file)
-        const command = new PutObjectCommand({
+
+        const randomImagename = () => crypto.randomBytes(16).toString('hex');
+        const imageName = randomImagename()
+        let command = new PutObjectCommand({
             Bucket : process.env.AWS_BUCKET_NAME,
-            Key : file.originalname || 'unknow',
+            Key : imageName,
             Body : file.buffer,
             ContentType : 'image/jpeg'
         })
 
-        const result  = await s3.send(command)
-        console.log(result)
-        return result
-
+        const result =  await s3.send(command)
+        console.log({result})
+           const signedUrl = new GetObjectCommand({    
+            Bucket : process.env.AWS_BUCKET_NAME,
+            Key : imageName,
+           });
+        const url = await getSignedUrl(s3, signedUrl, { expiresIn: 3600 });
+        return url
     } catch (error) {
         console.log(error)
     }

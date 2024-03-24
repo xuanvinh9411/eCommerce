@@ -2,7 +2,6 @@ const compression = require('compression')
 const express = require('express')
 const { default: helmet } = require('helmet')
 const morgan = require('morgan')
-const Router = require('./routes/index')
 const app = express()
 require('dotenv').config();
 //Init middlewares
@@ -21,6 +20,7 @@ app.use(express.urlencoded(({
 require('./dbs/init.mongodb')
 const { countConnect , checkOverLoad } = require('./helpers/check.connect')
 // checkOverLoad();
+const Router = require('./routes/index')
 
 //Init router
 // app.use('',require('./routes'))

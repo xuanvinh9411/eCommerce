@@ -8,7 +8,7 @@ cloudinary.config({
     api_secret : "NKIr4M_FC_h4vIBIeu1T0z5jZxU"
 })
 
-console.log(cloudinary.config())
+console.log("cloud dinary connect success")
 
 
 module.exports = cloudinary
