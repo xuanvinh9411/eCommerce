@@ -18,6 +18,7 @@ class UploadController {
 
     uploadFileThumb = async (req, res, next) =>{
         const { file } = req
+        console.log(`file` ,file)
         if(!file) throw new BadRequestError('File missing')
     
         new SuccessResponse({
@@ -40,7 +41,21 @@ class UploadController {
         }).send(res)
     }
 
+    uploadImageFromLocalS3 = async (req, res, next) =>{
+        const { file } = req
+        if(!file) throw new BadRequestError('File missing')
+    
+        new CREATED({
+            message : 'upload successfully uploaded',
+            metadata : await UploadService.uploadImageFromLocalS3({
+                file
+            })
+        }).send(res)
+    }
+
 
 }
+
+
 
 module.exports = new UploadController()
